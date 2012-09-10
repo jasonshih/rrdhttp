@@ -7,8 +7,7 @@ import rrdtool
 import tempfile
 from datetime import datetime
 
-DATADIR = '.'
-DBDIR = '/home/pchaussalet/vtc/missions/ud/monitoring'
+DBDIR = './dbs'
 
 COLOR_BITS = ('00', '88', 'ff')
 
