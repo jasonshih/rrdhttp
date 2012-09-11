@@ -26,7 +26,7 @@ HTML_TEMPLATE = '''<html>
   <title>%s - %s</title>
 </head>
 <body onload="self.setTimeout(function() {location.reload()}, 30000)" style="margin: 0;">
-  <img src="/graph/%s/img%s" alt="%s graph"/>
+  <img src="%s/graph/%s/img%s" alt="%s graph"/>
 </body>
 </html>'''
 
@@ -54,7 +54,7 @@ def info(db_name):
 def graph_html(db_name):
   query_string = request.url.replace(request.base_url, '')
   timestamp = datetime.isoformat(datetime.now()).split('.')[0].replace('T', ' ')
-  return HTML_TEMPLATE % (db_name,timestamp,db_name,query_string,db_name)
+  return HTML_TEMPLATE % (db_name,timestamp,request.environ['SCRIPT_NAME'],db_name,query_string,db_name)
 
 @app.route('/graph/<db_name>/img')
 def graph_img(db_name):
