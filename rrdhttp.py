@@ -25,7 +25,7 @@ HTML_TEMPLATE = '''<html>
 <head>
   <title>%s - %s</title>
 </head>
-<body onload="self.setTimeout(function() {location.reload()}, 30000)">
+<body onload="self.setTimeout(function() {location.reload()}, 30000)" style="margin: 0;">
   <img src="/graph/%s/img%s" alt="%s graph"/>
 </body>
 </html>'''
