@@ -5,6 +5,7 @@ app = Flask(__name__)
 import os
 import rrdtool
 import tempfile
+import urllib
 from datetime import datetime
 
 DBDIR = './dbs'
@@ -63,17 +64,22 @@ def graph_img(db_name):
   data_list = _deduplicate([data.split('[')[-1].split(']')[0] for data in rrdtool.info(db_path).keys() if data.startswith('ds[')])
   defs = ['DEF:%s=%s:%s:AVERAGE' % (data, db_path, data) for data in data_list]
   lines = ['LINE2:%s#%s:%s' % (data, COLORS[idx], data) for idx, data in enumerate(data_list)]
-  args = _dict2options(options_dict) + defs + lines
+  options, raw_options = _dict2options(options_dict) 
+  args = options + defs + lines + raw_options
   rrdtool.graph(tmp, *args)
   return send_file(tmp)
 
 def _dict2options(dictionary):
   options = []
+  raw_options = []
   for key, value in dictionary.items():
-    options.append('--' + key)
-    if value != '':
-      options.append(str(value))
-  return options
+    if key != 'raw_opts':
+      options.append('--' + key)
+      if value != '':
+        options.append(str(value))
+  if 'raw_opts' in dictionary.keys():
+    raw_options = str(urllib.unquote(dictionary['raw_opts'])).split(' ')
+  return options, raw_options
       
 def _get_db_path(db_name):
   return os.path.join(DBDIR, '%s.rrd' % (db_name,)).encode()
